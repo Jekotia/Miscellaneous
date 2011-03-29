@@ -1,0 +1,2 @@
+This folder contains work done for The Speed Gamers/the TSG community (http://www.thespeedgamers.com/)
+friendcodes.php hooks into a phpBB3 database and returns the contents of the 'Chat Name' (for users that have a different display name in the streams justin.tv chat room) and '3DS Friend Code' fields.
