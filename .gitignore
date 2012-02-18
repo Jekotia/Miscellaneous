@@ -1,1 +1,2 @@
-Miscellaneous.komodoproject
+*.komodoproject
+.komodotools/

@@ -2,8 +2,8 @@
 	if (isset($_GET['p'])) {$p = $_GET['p'];}
 	else {$p = '1';}
 
-	$min = 100 * $p - 99;
-	$max = $min + 100;
+	$count = 100;
+	$num = $count * $p + $count;
 
 	echo "<strong>Page #".$p."</strong> - ";
 
@@ -15,15 +15,13 @@
 	$pn = $p+1;
 	echo "<a href='?p=".$pn."' >Next Page</a><br/>".PHP_EOL."<br/>".PHP_EOL;
 
-	$mysql_host	=	'localhost';
-	$mysql_user	=	'root';
-	$mysql_pass	=	'november';
-	$mysql_db	=	'minecraft';
+	include_once('../auth.php');
+	$mysql_db = 'minecraft';
 
 	mysql_connect($mysql_host, $mysql_user, $mysql_pass)or die("cannot connect");
 	mysql_select_db($mysql_db)or die("cannot select DB");
 
-	$result = mysql_query("SELECT * FROM `lb-players` LIMIT ".$min.",".$max);
+	$result = mysql_query("SELECT * FROM `lb-players` LIMIT ".$num.",".$count);
 	while($row = mysql_fetch_array($result))
 	{
 		$IP1 = substr($row['ip'], 0, strpos($row['ip'], ":"));

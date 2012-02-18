@@ -3,10 +3,8 @@
 
 // change these things
 
-   $server = "localhost";
-   $dbuser = "root";
-   $dbpass = "november";
-   $dbname = "minecraft";
+	include_once('../auth.php');
+	$dbname = "minecraft";
    
 mysql_connect($server, $dbuser, $dbpass);
 mysql_select_db($dbname);

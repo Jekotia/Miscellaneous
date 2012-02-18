@@ -14,12 +14,10 @@
 		return $data;
 	}
    
-	$ka_bantable	=   'banlist';
-	$mysql_host		=	'localhost';
-	$mysql_user		=	'root';
-	$mysql_pass		=	'november';
-	$mysql_db		=	'minecraft';
-	$write_location	=	'banned_names.txt';
+	$ka_bantable = 'banlist';
+	include_once('../auth.php');
+	$mysql_db = 'minecraft';
+	$write_location = 'banned_names.txt';
 	
 	$con = mysql_connect($mysql_host,$mysql_user,$mysql_pass);
 	if (!$con)
