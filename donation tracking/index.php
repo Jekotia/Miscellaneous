@@ -79,12 +79,13 @@ $(function() {
 	$query_select_minerp = mysql_query("SELECT * FROM `dt_users` WHERE `user_id` = '1'");
 	$row_select_minerp = mysql_fetch_array($query_select_minerp);
 	$minerp_avail_funds = $row_select_minerp['user_inc_total'] - $row_select_minerp['user_exp_total'];
-	$minerp_need_funds = $minerp_bill_sum - $minerp_avail_funds;
-	echo $id[2]."<h3><a href='#'>Server Finances - $".$minerp_avail_funds." available - $".$minerp_need_funds." more needed - due ".$minerp_bill_due."</a></h3>".PHP_EOL;
+	echo $id[2]."<h3><a href='#'>Server Finances</a></h3>".PHP_EOL;
 	echo $id[2]."<div>".PHP_EOL;
-	echo $id[3]."Total donations: $".$row_select_minerp['user_inc_total'].PHP_EOL;
-	echo $id[3]."<br/>".PHP_EOL;
-	echo $id[3]."Total expenses: $".$row_select_minerp['user_exp_total'].PHP_EOL;
+	echo $id[3]."Total donations: $".$row_select_minerp['user_inc_total']." <br/>".PHP_EOL;
+	echo $id[3]."Total expenses: $".$row_select_minerp['user_exp_total']." <br/>".PHP_EOL;
+	echo $id[3]."Available funds: $".$minerp_avail_funds." <br/>".PHP_EOL;
+	echo $id[3]."Required funds: $".$minerp_bill_sum." <br/>".PHP_EOL;
+	echo $id[3]."Bill due ".$minerp_bill_due.PHP_EOL;
 	echo $id[2]."</div>".PHP_EOL;
 
 	$query_select_users = mysql_query("SELECT * FROM `dt_users` LIMIT 10,1000");
