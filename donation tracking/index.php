@@ -3,7 +3,6 @@
 <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
 <script>
 $(function() {
-	$( "#accordion" ).accordion();
 	$( "#accordion" ).accordion({ autoHeight: false });
 });
 </script>
@@ -34,7 +33,7 @@ $(function() {
 			{
 				$user_exp_num = 0;
 				$user_exp_total = 0;
-		
+
 				$query_select_expenses = mysql_query("SELECT * FROM `dt_expenses` WHERE `exp_user_id` = '".$row_select_users['user_id']."'");
 				while($row_select_expenses = mysql_fetch_array($query_select_expenses))
 				{
@@ -44,7 +43,7 @@ $(function() {
 				}
 				$query_update_users = "UPDATE `".$mysql_table_prefix."users` SET `user_exp_num` = '".$user_exp_num."', `user_exp_total` = '".$user_exp_total."' WHERE `user_id` = '".$row_select_users['user_id']."'";
 				mysql_query($query_update_users);
-				
+
 				$query_update_minerp = "UPDATE `".$mysql_table_prefix."users` SET `user_exp_total` = '".$minerp_exp_total."' WHERE `user_id` = '1'";
 				mysql_query($query_update_minerp);
 			}
@@ -55,7 +54,7 @@ $(function() {
 			{
 				$user_inc_num = 0;
 				$user_inc_total = 0;
-		
+
 				$query_select_income = mysql_query("SELECT * FROM `dt_income` WHERE `inc_user_id` = '".$row_select_users['user_id']."'");
 				while($row_select_income = mysql_fetch_array($query_select_income))
 				{
@@ -65,7 +64,7 @@ $(function() {
 				}
 				$query_update_users = "UPDATE `".$mysql_table_prefix."users` SET `user_inc_num` = '".$user_inc_num."', `user_inc_total` = '".$user_inc_total."' WHERE `user_id` = '".$row_select_users['user_id']."'";
 				mysql_query($query_update_users);
-				
+
 				$query_update_minerp = "UPDATE `".$mysql_table_prefix."users` SET `user_inc_total` = '".$minerp_inc_total."' WHERE `user_id` = '1'";
 				mysql_query($query_update_minerp);
 			}
