@@ -1,82 +1,112 @@
 <link type="text/css" href="css/base/jquery-ui.css" rel="Stylesheet" />	
 <script type="text/javascript" src="js/jquery-1.7.1.min.js"></script>
 <script type="text/javascript" src="js/jquery-ui-1.8.17.custom.min.js"></script>
-
-<?php
-$id = array("1"=>"	","2"=>"		","3"=>"			","4"=>"				");
-// database connect
-	include_once('../auth.php');
-	$mysql_db	=	'repo_misc';
-	mysql_connect($mysql_host, $mysql_user, $mysql_pass)or die("cannot connect");
-	mysql_select_db($mysql_db)or die("cannot select DB");
-// database queries
-	$query_user_label = mysql_query("SELECT * FROM `dt_users`");
-	$query_income = mysql_query("SELECT * FROM `dt_income` ORDER BY `inc_id` DESC");
-// array prep
-	$array_user_label = array("0"=>"null");
-// stores 'user_id => user_label' pairs in $array_user_label
-	while($row_user_label = mysql_fetch_array($query_user_label))
-	{
-		array_push($array_user_label, $row_user_label['user_label']);
-
-		//while (list($key,$value) = each($array_user_label))
-		//{
-		//	echo $key." : ".$value." <br/>".PHP_EOL;
-		//}
-	}
-
-//
-?>
-<table>
-	<tr>
-		<th>Name</th>
-		<th>Amount</th>
-		<th>Label</th>
-		<th>Timestamp</th>
-	</tr>
-<?php
-	while($row_income = mysql_fetch_array($query_income))
-	{
-		echo $id[1]."<tr>".PHP_EOL;
-		//echo $id[2]."<td>".$row_income['inc_id']."</td>".PHP_EOL;
-		echo $id[2]."<td>".$array_user_label[$row_income['inc_user_id']]."</td>".PHP_EOL;
-		echo $id[2]."<td>".$row_income['inc_amount']."</td>".PHP_EOL;
-		echo $id[2]."<td>".$row_income['inc_label']."</td>".PHP_EOL;
-		echo $id[2]."<td>".$row_income['inc_datetime']."</td>".PHP_EOL;
-		echo $id[1]."</tr>".PHP_EOL;
-	}
-	echo "</table>".PHP_EOL;
-?>
-
 <script>
 $(function() {
-	$( "#accordion" ).accordion({
-		collapsible: true
-	});
+	$( "#accordion" ).accordion();
 });
 </script>
+
+<?php
+	$minerp_bill_due = "March 14th";
+	$minerp_bill_sum = 50;
+	$id = array("1"=>"	","2"=>"		","3"=>"			","4"=>"				");
+// database connect
+	include_once('../auth.php');
+	$mysql_db = 'repo_misc';
+	$mysql_table_prefix = 'dt_';
+	mysql_connect($mysql_host, $mysql_user, $mysql_pass)or die("cannot connect");
+	mysql_select_db($mysql_db)or die("cannot select DB");
+
+//########
+// Update
+//########
+	if (isset($_GET['action']))
+	{
+		$action = $_GET['action'];
+		if ($action = 'update')
+		{
+		// update user expenses
+			$minerp_exp_total = 0;
+			$query_select_users = mysql_query("SELECT * FROM `dt_users`");
+			while($row_select_users = mysql_fetch_array($query_select_users))
+			{
+				$user_exp_num = 0;
+				$user_exp_total = 0;
+		
+				$query_select_expenses = mysql_query("SELECT * FROM `dt_expenses` WHERE `exp_user_id` = '".$row_select_users['user_id']."'");
+				while($row_select_expenses = mysql_fetch_array($query_select_expenses))
+				{
+					$user_exp_num++;
+					$user_exp_total = $user_exp_total + $row_select_expenses['exp_amount'];
+					$minerp_exp_total = $minerp_exp_total + $row_select_expenses['exp_amount'];
+				}
+				$query_update_users = "UPDATE `".$mysql_table_prefix."users` SET `user_exp_num` = '".$user_exp_num."', `user_exp_total` = '".$user_exp_total."' WHERE `user_id` = '".$row_select_users['user_id']."'";
+				mysql_query($query_update_users);
+				
+				$query_update_minerp = "UPDATE `".$mysql_table_prefix."users` SET `user_exp_total` = '".$minerp_exp_total."' WHERE `user_id` = '1'";
+				mysql_query($query_update_minerp);
+			}
+		// update user income
+			$minerp_inc_total = 0;
+			$query_select_users = mysql_query("SELECT * FROM `dt_users` LIMIT 10,1000");
+			while($row_select_users = mysql_fetch_array($query_select_users))
+			{
+				$user_inc_num = 0;
+				$user_inc_total = 0;
+		
+				$query_select_income = mysql_query("SELECT * FROM `dt_income` WHERE `inc_user_id` = '".$row_select_users['user_id']."'");
+				while($row_select_income = mysql_fetch_array($query_select_income))
+				{
+					$user_inc_num++;
+					$user_inc_total = $user_inc_total + $row_select_income['inc_amount'];
+					$minerp_inc_total = $minerp_inc_total + $row_select_income['inc_amount'];
+				}
+				$query_update_users = "UPDATE `".$mysql_table_prefix."users` SET `user_inc_num` = '".$user_inc_num."', `user_inc_total` = '".$user_inc_total."' WHERE `user_id` = '".$row_select_users['user_id']."'";
+				mysql_query($query_update_users);
+				
+				$query_update_minerp = "UPDATE `".$mysql_table_prefix."users` SET `user_inc_total` = '".$minerp_inc_total."' WHERE `user_id` = '1'";
+				mysql_query($query_update_minerp);
+			}
+			echo "Data updated. Click <a href='index.php'>here</a> to go back.";
+			die;
+		}
+	}
+?>
 <div class="demo">
 	<div id="accordion">
-		<h3><a href="#">Section 1</a></h3>
-		<div>
-			<p>Mauris mauris ante, blandit et, ultrices a, suscipit eget, quam. Integer ut neque. Vivamus nisi metus, molestie vel, gravida in, condimentum sit amet, nunc. Nam a nibh. Donec suscipit eros. Nam mi. Proin viverra leo ut odio. Curabitur malesuada. Vestibulum a velit eu ante scelerisque vulputate.</p>
-		</div>
-		<h3><a href="#">Section 2</a></h3>
-		<div>
-			<p>Sed non urna. Donec et ante. Phasellus eu ligula. Vestibulum sit amet purus. Vivamus hendrerit, dolor at aliquet laoreet, mauris turpis porttitor velit, faucibus interdum tellus libero ac justo. Vivamus non quam. In suscipit faucibus urna. </p>
-		</div>
-		<h3><a href="#">Section 3</a></h3>
-		<div>
-			<p>Nam enim risus, molestie et, porta ac, aliquam ac, risus. Quisque lobortis. Phasellus pellentesque purus in massa. Aenean in pede. Phasellus ac libero ac tellus pellentesque semper. Sed ac felis. Sed commodo, magna quis lacinia ornare, quam ante aliquam nisi, eu iaculis leo purus venenatis dui. </p>
-			<ul>
-				<li>List item one</li>
-				<li>List item two</li>
-				<li>List item three</li>
-			</ul>
-		</div>
-		<h3><a href="#">Section 4</a></h3>
-		<div>
-			<p>Cras dictum. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Aenean lacinia mauris vel est. </p><p>Suspendisse eu nisl. Nullam ut libero. Integer dignissim consequat lectus. Class aptent taciti sociosqu ad litora torquent per conubia nostra, per inceptos himenaeos. </p>
+<?php
+	$query_select_minerp = mysql_query("SELECT * FROM `dt_users` WHERE `user_id` = '1'");
+	$row_select_minerp = mysql_fetch_array($query_select_minerp);
+	$minerp_avail_funds = $row_select_minerp['user_inc_total'] - $row_select_minerp['user_exp_total'];
+	$minerp_need_funds = $minerp_bill_sum - $minerp_avail_funds;
+	echo $id[2]."<h3><a href='#'>Server Finances - $".$minerp_avail_funds." available - $".$minerp_need_funds." more needed - due ".$minerp_bill_due."</a></h3>".PHP_EOL;
+	echo $id[2]."<div>".PHP_EOL;
+	echo $id[3]."Total donations: $".$row_select_minerp['user_inc_total'].PHP_EOL;
+	echo $id[3]."<br/>".PHP_EOL;
+	echo $id[3]."Total expenses: $".$row_select_minerp['user_exp_total'].PHP_EOL;
+	echo $id[2]."</div>".PHP_EOL;
+
+	$query_select_users = mysql_query("SELECT * FROM `dt_users` LIMIT 10,1000");
+	while($row_select_users = mysql_fetch_array($query_select_users))
+	{
+		$user_inc_num = 0;
+		echo $id[2]."<h3><a href='#'>".$row_select_users['user_label']." - ".$row_select_users['user_inc_num']." donation(s) - $".$row_select_users['user_inc_total']." total</a></h3>".PHP_EOL;
+		echo $id[2]."<div>".PHP_EOL;
+
+		$query_select_income = mysql_query("SELECT * FROM `dt_income` WHERE `inc_user_id` = '".$row_select_users['user_id']."'");
+		while($row_select_income = mysql_fetch_array($query_select_income))
+		{
+			$user_inc_num++;
+			if ($user_inc_num > 1) echo $id[3]."<br/>".PHP_EOL;
+			echo $id[3]."$".$row_select_income['inc_amount']." - ".$row_select_income['inc_timestamp'].PHP_EOL;
+		}
+		echo $id[2]."</div>".PHP_EOL;
+	}
+?>
 		</div>
 	</div>
 </div>
+<br/>
+<br/>
+<a href='?action=update'>Update</a>
