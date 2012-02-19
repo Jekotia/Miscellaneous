@@ -4,6 +4,7 @@
 <script>
 $(function() {
 	$( "#accordion" ).accordion();
+	$( "#accordion" ).accordion({ autoHeight: false });
 });
 </script>
 
