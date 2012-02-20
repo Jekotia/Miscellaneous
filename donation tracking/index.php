@@ -18,9 +18,7 @@ $(function() {
 	mysql_connect($mysql_host, $mysql_user, $mysql_pass)or die("cannot connect");
 	mysql_select_db($mysql_db)or die("cannot select DB");
 
-//########
-// Update
-//########
+// update
 	if (isset($_GET['action']))
 	{
 		$action = $_GET['action'];
