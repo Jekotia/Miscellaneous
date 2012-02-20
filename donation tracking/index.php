@@ -13,7 +13,7 @@ $(function() {
 	$id = array("1"=>"	","2"=>"		","3"=>"			","4"=>"				");
 // database connect
 	include_once('../mysql.php');
-	$mysql_db = 'repo_misc';
+	$mysql_db = 'homebrew';
 	$mysql_table_prefix = 'dt_';
 	mysql_connect($mysql_host, $mysql_user, $mysql_pass)or die("cannot connect");
 	mysql_select_db($mysql_db)or die("cannot select DB");
