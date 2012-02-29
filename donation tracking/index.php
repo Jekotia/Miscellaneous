@@ -86,7 +86,7 @@ $(function() {
 	echo $id[3]."Bill due ".$minerp_bill_due.PHP_EOL;
 	echo $id[2]."</div>".PHP_EOL;
 
-	$query_select_users = mysql_query("SELECT * FROM `dt_users` LIMIT 10,1000");
+	$query_select_users = mysql_query("SELECT * FROM `dt_users` WHERE `user_id` > '11' ORDER BY `user_inc_total` DESC");
 	while($row_select_users = mysql_fetch_array($query_select_users))
 	{
 		$user_inc_num = 0;
